@@ -23,6 +23,46 @@ Tất cả các bước đã chạy thật trên máy cá nhân (14/10/2026). Ou
 | 04 | ADK agent — thời tiết hiện tại | ✅ "Thời tiết hiện tại ở Hà Nội?" → agent gọi `get_current_weather("Hanoi")` qua MCP → WeatherAPI (33.9°C, độ ẩm 42%) | [`04-adk-current.txt`](screenshots/04-adk-current.txt) |
 | 04 | ADK agent — dự báo | ✅ "Dự báo 3 ngày tới ở Đà Nẵng" → agent gọi `get_forecast` → dự báo 14–16/10 kèm lời khuyên | [`04-adk-forecast.txt`](screenshots/04-adk-forecast.txt) |
 
+### Ảnh chụp kết quả
+
+> Ảnh bước 04 (ADK) được chụp trực tiếp từ giao diện `adk web`. Ảnh các bước terminal (01–03, verify_setup) được render từ output thật đã lưu trong file `.txt` tương ứng.
+
+**Bước 01 — Function Calling**
+
+![01](screenshots/01-function-calling.png)
+
+**Bước 02 — MCP client/server (stdio)**
+
+![02](screenshots/02-mcp-client.png)
+
+**Bước 03a — Auth: token hợp lệ**
+
+![03a-ok](screenshots/03a-auth-ok.png)
+
+**Bước 03a — Auth: token sai / không có token → 401**
+
+![03a-fail](screenshots/03a-auth-fail.png)
+
+**Bước 03b — Tool Registry**
+
+![03b](screenshots/03b-registry.png)
+
+**Bước 03c — Versioning**
+
+![03c](screenshots/03c-versioning.png)
+
+**Bước 04 — verify_setup.py**
+
+![04-verify](screenshots/04-verify-setup.png)
+
+**Bước 04 — ADK agent: thời tiết hiện tại (Hà Nội)**
+
+![04-current](screenshots/04-adk-current.png)
+
+**Bước 04 — ADK agent: dự báo 3 ngày (Đà Nẵng)**
+
+![04-forecast](screenshots/04-adk-forecast.png)
+
 ### Vấn đề gặp phải khi chạy
 
 - `gemini-2.5-flash` trả **404** với tài khoản mới ("no longer available to new users") → đổi sang `gemini-3.8-flash`.
