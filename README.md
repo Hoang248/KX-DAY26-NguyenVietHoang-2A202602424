@@ -1,5 +1,39 @@
 # Phân biệt MCP và Function Calling
 
+## Thông tin sinh viên
+
+| | |
+|---|---|
+| **Họ và tên** | Nguyễn Việt Hoàng |
+| **MSSV** | 2A202602424 |
+| **Bài** | Day 26 — MCP & Tools Integration |
+
+## Kết quả bài làm
+
+| Bước | Nội dung đã thực hiện | Bằng chứng |
+|---|---|---|
+| 01 | Function Calling thuần với Gemini SDK: model chọn `get_weather`, app tự thực thi và trả kết quả lại cho model | [`screenshots/01-function-calling.png`](screenshots/01-function-calling.png) |
+| 02 | MCP server/client qua stdio: client `list_tools()` rồi `call_tool()` tới server độc lập | [`screenshots/02-mcp-client.png`](screenshots/02-mcp-client.png) |
+| 03a | Auth: token hợp lệ gọi tool thành công, token sai/thiếu bị từ chối (401/403) | [`03a-auth-ok.png`](screenshots/03a-auth-ok.png), [`03a-auth-fail.png`](screenshots/03a-auth-fail.png) |
+| 03b | Tool Registry: agent tìm tool theo tag `weather` và chọn bản mới nhất, không deprecated | [`screenshots/03b-registry.png`](screenshots/03b-registry.png) |
+| 03c | Versioning: `get_weather` (v1) và `get_weather_v2` chạy song song, client cũ không bị break | [`screenshots/03c-versioning.png`](screenshots/03c-versioning.png) |
+| 04 | ADK agent kết nối MCP server (Streamable HTTP) dùng WeatherAPI: hỏi thời tiết hiện tại và dự báo | [`04-verify-setup.png`](screenshots/04-verify-setup.png), [`04-adk-current.png`](screenshots/04-adk-current.png), [`04-adk-forecast.png`](screenshots/04-adk-forecast.png) |
+
+### Các chỉnh sửa so với repo gốc
+
+- **Đổi model Gemini** sang `gemini-3.8-flash` (tài khoản mới không dùng được `gemini-2.5-flash`), có thể ghi đè bằng biến môi trường `GEMINI_MODEL`.
+- **Tự retry khi Gemini quá tải** (HTTP 429/500/503) ở bước 01 và agent bước 04, thay vì dừng ngay với lỗi.
+- **Sửa `verify_setup.py`** để in đúng tên model khi model là đối tượng `Gemini` thay vì chuỗi.
+- Gỡ file rác `.DS_Store` khỏi git, thêm thư mục `screenshots/`.
+
+### Nhận xét rút ra
+
+- Function Calling là *khả năng của model*; MCP là *giao thức* để app/agent kết nối tới tool. MCP vẫn dùng Function Calling bên dưới để model chọn tool.
+- Với MCP, server tự công bố schema (`@mcp.tool()`), client khám phá tool lúc runtime — cùng một server dùng được cho script Python (bước 02) lẫn ADK agent (bước 04) mà không sửa code server.
+- Lên production cần thêm: xác thực (Bearer token), registry để tìm tool theo nhu cầu, và versioning để nâng cấp tool mà không làm hỏng client cũ.
+
+---
+
 Đây là hai khái niệm hay bị nhầm lẫn nhưng thực ra ở **hai tầng khác nhau**, và **bổ sung cho nhau** chứ không thay thế.
 
 ## Cấu trúc repo
@@ -18,19 +52,21 @@ day26-mcp/
 │   ├── weather_server.py
 │   └── weather_client.py
 │
-└── 03-production/           ← Bước 3: Auth, Tool Registry, Versioning
+├── 03-production/           ← Bước 3: Auth, Tool Registry, Versioning
     ├── README.md
     ├── auth_server.py
     ├── auth_client.py
     ├── registry.json
     ├── registry_client.py
     ├── versioned_server.py
-    └── versioned_client.py
+│   └── versioned_client.py
 │
-└── 04-lab/                  ← Bước 4: Agent Google ADK + MCP server thật (WeatherAPI)
+├── 04-lab/                  ← Bước 4: Agent Google ADK + MCP server thật (WeatherAPI)
     ├── README.md
     ├── mcp-server/          ← FastMCP server (Streamable HTTP, Dockerfile cho Cloud Run)
-    └── mcp-client/          ← ADK agent dùng McpToolset
+│   └── mcp-client/          ← ADK agent dùng McpToolset
+│
+└── screenshots/             ← Ảnh chụp kết quả chạy từng bước
 ```
 
 > Bước 01–03 dùng **MCP Python SDK v2** (`mcp>=2.0`, xem `requirements.txt`).

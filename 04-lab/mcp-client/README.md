@@ -103,7 +103,7 @@ connection_params = StreamableHTTPConnectionParams(
 
 root_agent = Agent(
     name="weather_agent",
-    model="gemini-2.5-flash",
+    model=MODEL,  # Gemini(model=GEMINI_MODEL, retry_options=...)
     tools=[weather_tools],
 )
 ```

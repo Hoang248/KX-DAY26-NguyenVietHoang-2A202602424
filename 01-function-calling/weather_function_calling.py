@@ -9,12 +9,21 @@ Cách chạy:
     python weather_function_calling.py
 """
 
+import os
+
 from google import genai
 from google.genai import types
 
-client = genai.Client()
+# Gemini đôi khi trả 503 (quá tải) / 429: tự thử lại thay vì báo lỗi ngay.
+client = genai.Client(
+    http_options=types.HttpOptions(
+        retry_options=types.HttpRetryOptions(
+            attempts=8, initial_delay=2, max_delay=30, http_status_codes=[429, 500, 503]
+        )
+    )
+)
 
-MODEL = "gemini-2.5-flash"
+MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
 
 SYSTEM_INSTRUCTION = (
     "Bạn là trợ lý thời tiết thân thiện, trả lời bằng tiếng Việt tự nhiên. "
