@@ -1,0 +1,15 @@
+# ADK Web (http://127.0.0.1:8000) - weather_agent, model gemini-3.7-flash
+# MCP server: http://localhost:8085/mcp (Streamable HTTP) -> WeatherAPI.com
+
+#1 [user]  Thời tiết hiện tại ở Hà Nội thế nào?
+#2 [agent] gọi tool: get_current_weather("Hanoi")
+#3 [agent] nhận kết quả: get_current_weather
+#4 [agent] Thời tiết hiện tại ở Hà Nội như sau:
+
+  Tình trạng: Có mù/khói mờ (Smoky haze)
+  Nhiệt độ: 33.9°C (Cảm giác thực tế: 35.9°C)
+  Độ ẩm: 42%
+  Gió: 9.0 km/h (hướng Nam - Đông Nam)
+  Chỉ số UV: 1.0
+  Tầm nhìn xa: 10.0 km
+  Áp suất khí quyển: 1011.0 mb

@@ -1,0 +1,5 @@
+$ python auth_client.py   # token hợp lệ (dev-token-abc123)
+Tools (có auth):
+  - get_weather: Lấy thời tiết hiện tại của một thành phố.
+
+Kết quả: Hanoi: 29°C, trời mưa

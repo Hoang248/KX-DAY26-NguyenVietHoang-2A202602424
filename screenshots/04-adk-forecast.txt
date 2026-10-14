@@ -1,0 +1,30 @@
+# ADK Web (http://127.0.0.1:8000) - weather_agent, model gemini-3.7-flash
+# MCP server: http://localhost:8085/mcp (Streamable HTTP) -> WeatherAPI.com
+
+#1 [user]  Dự báo thời tiết 3 ngày tới ở Đà Nẵng
+#2 [agent] gọi tool: get_forecast
+#3 [agent] nhận kết quả: get_forecast
+#4 [agent] Dự báo thời tiết 3 ngày tới tại Đà Nẵng:
+
+  Ngày 1 (14/10/2026)
+    Thời tiết: Sương mù (Fog), có khả năng mưa cao
+    Nhiệt độ: 21.4°C – 27.3°C
+    Khả năng mưa: 86%
+    Gió tối đa: 7.6 km/h
+    Chỉ số UV: 9.2 (Rất cao)
+  Ngày 2 (15/10/2026)
+    Thời tiết: Sương mù (Fog), rải rác có mưa
+    Nhiệt độ: 20.4°C – 28.9°C
+    Khả năng mưa: 60%
+    Gió tối đa: 7.9 km/h
+    Chỉ số UV: 9.0 (Rất cao)
+  Ngày 3 (16/10/2026)
+    Thời tiết: Trời nắng ráo (Sunny)
+    Nhiệt độ: 19.3°C – 29.5°C
+    Khả năng mưa: 14% (Thấp)
+    Gió tối đa: 9.7 km/h
+    Chỉ số UV: 10.0 (Rất cao)
+
+  💡 Lưu ý: Trong hai ngày đầu tiên khả năng có mưa khá cao kèm sương mù, bạn nên chuẩn bị
+  sẵn áo mưa hoặc ô khi ra ngoài. Chỉ số UV ở mức cao/rất cao nên hãy chú ý thoa kem chống
+  nắng và che chắn kỹ lưỡng.

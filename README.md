@@ -10,14 +10,24 @@
 
 ## Kết quả bài làm
 
-| Bước | Nội dung đã thực hiện | Bằng chứng |
-|---|---|---|
-| 01 | Function Calling thuần với Gemini SDK: model chọn `get_weather`, app tự thực thi và trả kết quả lại cho model | [`screenshots/01-function-calling.png`](screenshots/01-function-calling.png) |
-| 02 | MCP server/client qua stdio: client `list_tools()` rồi `call_tool()` tới server độc lập | [`screenshots/02-mcp-client.png`](screenshots/02-mcp-client.png) |
-| 03a | Auth: token hợp lệ gọi tool thành công, token sai/thiếu bị từ chối (401/403) | [`03a-auth-ok.png`](screenshots/03a-auth-ok.png), [`03a-auth-fail.png`](screenshots/03a-auth-fail.png) |
-| 03b | Tool Registry: agent tìm tool theo tag `weather` và chọn bản mới nhất, không deprecated | [`screenshots/03b-registry.png`](screenshots/03b-registry.png) |
-| 03c | Versioning: `get_weather` (v1) và `get_weather_v2` chạy song song, client cũ không bị break | [`screenshots/03c-versioning.png`](screenshots/03c-versioning.png) |
-| 04 | ADK agent kết nối MCP server (Streamable HTTP) dùng WeatherAPI: hỏi thời tiết hiện tại và dự báo | [`04-verify-setup.png`](screenshots/04-verify-setup.png), [`04-adk-current.png`](screenshots/04-adk-current.png), [`04-adk-forecast.png`](screenshots/04-adk-forecast.png) |
+Tất cả các bước đã chạy thật trên máy cá nhân (14/10/2026). Output gốc của từng bước được lưu trong thư mục [`screenshots/`](screenshots/).
+
+| Bước | Nội dung | Kết quả | Bằng chứng |
+|---|---|---|---|
+| 01 | Function Calling thuần với Gemini SDK | ✅ Model gọi `get_weather("Hà Nội")` và `get_weather("Đà Nẵng")`, app tự thực thi rồi model tổng hợp câu trả lời tiếng Việt | [`01-function-calling.txt`](screenshots/01-function-calling.txt) |
+| 02 | MCP server/client qua stdio | ✅ Client `list_tools()` thấy `get_weather`, `call_tool()` cho Hanoi, Danang, Haiphong | [`02-mcp-client.txt`](screenshots/02-mcp-client.txt) |
+| 03a | Auth — Bearer token | ✅ Token đúng → gọi tool thành công (200); token sai / không có token → **401 Unauthorized** | [`03a-auth-ok.txt`](screenshots/03a-auth-ok.txt), [`03a-auth-fail.txt`](screenshots/03a-auth-fail.txt) |
+| 03b | Tool Registry | ✅ Tìm theo tag `weather` ra 2 tool, agent chọn best match `get_weather_v2 v2.0.0` và gọi thành công | [`03b-registry.txt`](screenshots/03b-registry.txt) |
+| 03c | Versioning | ✅ `server://info` công bố v2.0.0 + deprecated `get_weather`; v1 vẫn chạy, v2 trả JSON kèm forecast | [`03c-versioning.txt`](screenshots/03c-versioning.txt) |
+| 04 | Setup | ✅ `verify_setup.py`: tất cả checks passed, kết nối được MCP server `localhost:8085/mcp` | [`04-verify-setup.txt`](screenshots/04-verify-setup.txt) |
+| 04 | ADK agent — thời tiết hiện tại | ✅ "Thời tiết hiện tại ở Hà Nội?" → agent gọi `get_current_weather("Hanoi")` qua MCP → WeatherAPI (33.9°C, độ ẩm 42%) | [`04-adk-current.txt`](screenshots/04-adk-current.txt) |
+| 04 | ADK agent — dự báo | ✅ "Dự báo 3 ngày tới ở Đà Nẵng" → agent gọi `get_forecast` → dự báo 14–16/10 kèm lời khuyên | [`04-adk-forecast.txt`](screenshots/04-adk-forecast.txt) |
+
+### Vấn đề gặp phải khi chạy
+
+- `gemini-2.5-flash` trả **404** với tài khoản mới ("no longer available to new users") → đổi sang `gemini-3.8-flash`.
+- Gemini thường xuyên trả **503** (quá tải) → thêm retry tự động; log cho thấy request được thử lại vài lần rồi thành công.
+- Gói miễn phí giới hạn **20 request/ngày/model** (429 `RESOURCE_EXHAUSTED`) → khi hết quota của `gemini-3.8-flash`, chạy bước 04 với `GEMINI_MODEL=gemini-3.7-flash` (không cần sửa code).
 
 ### Các chỉnh sửa so với repo gốc
 

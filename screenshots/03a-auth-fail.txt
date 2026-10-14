@@ -1,0 +1,22 @@
+$ MCP_AUTH_TOKEN=wrong-token python auth_client.py   # token sai
+      |   File "C:\Users\LENOVO\KX-DAY26-NguyenVietHoang-2A202602424\.venv\Lib\site-packages\mcp\shared\jsonrpc_dispatcher.py", line 461, in send_raw_request
+      |     raise MCPError(code=outcome.code, message=outcome.message, data=outcome.data)
+      | mcp.shared.exceptions.MCPError: Server returned an error response
+      +------------------------------------
+
+$ curl -i -X POST http://localhost:8000/mcp   # không có token
+HTTP/1.1 401 Unauthorized
+date: Wed, 14 Oct 2026 08:20:29 GMT
+server: uvicorn
+content-type: application/json
+content-length: 74
+www-authenticate: Bearer error="invalid_token", error_description="Authentication required", resource_metadata="http://localhost:8000/.well-known/oauth-protected-resource"
+
+{"error": "invalid_token", "error_description": "Authentication required"}
+# Log server (auth_server.py):
+INFO:     127.0.0.1:57723 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57726 - "POST /mcp HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:57729 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57731 - "POST /mcp HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64115 - "POST /mcp HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:51560 - "POST /mcp HTTP/1.1" 401 Unauthorized
